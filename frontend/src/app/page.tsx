@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Home() {
   const handleRequestCredential = () => {
-    const email = "zk-access@gmail.com";
+    const email = "metacitizen.general@gmail.com";
     const subject = "Verifiable Credential Request";
     const body = `Hello,
 

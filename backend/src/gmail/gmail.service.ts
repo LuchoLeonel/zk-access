@@ -125,14 +125,30 @@ export class GmailService {
     const mailOptions = {
       from: `"ZK-Access" <${user}>`,
       to,
-      subject: 'Your ZK-Access QR Code',
+      subject: 'Your ZK-Access Credential QR Code',
       html: `
-        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 300px;">
-          <p style="margin-bottom: 20px;">Here is your QR Code to access the event or service:</p>
-          <div style="width: 250px; height: 250px; display: flex; justify-content: center; align-items: center;">
-            <img src="cid:qrcode" style="width: 100%; height: 100%; object-fit: contain;" />
-          </div>
-        </div>
+<div style="min-height: 300px; font-family: sans-serif; padding: 20px; display: flex; justify-content: center;">
+  <div style="background-color: #f9f9f9; border-radius: 12px; padding: 24px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+
+    <p style="margin-bottom: 12px;">
+      To use your credential, you need to install the Talao Wallet on your phone.<br/>
+      You can download it here:<br/>
+      <a href="https://talao.io/talao-wallet/" target="_blank" style="color: #3366cc;">https://talao.io/talao-wallet/</a>
+    </p>
+
+    <p style="margin-bottom: 20px;">
+      After installing the wallet, go to <strong>Settings</strong>, then <strong>Wallet Profile</strong>,
+      and select <strong>European Blockchain Services Infrastructure (EBSI v3.x)</strong> as your SSI Profile.
+    </p>
+
+    <p style="margin-bottom: 10px;">Here is the QR code for your organization's credential:</p>
+
+    <div style="width: 250px; height: 250px; margin: 0 auto;">
+      <img src="cid:qrcode" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
+    </div>
+
+  </div>
+</div>
       `,
       attachments: [
         {

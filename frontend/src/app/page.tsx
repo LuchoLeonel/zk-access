@@ -6,19 +6,27 @@ export default function Home() {
   const handleRequestCredential = () => {
     const email = "metacitizen.general@gmail.com";
     const subject = "Verifiable Credential Request";
-    const body = `Hello,
-
-I am requesting a verifiable credential corresponding to the company I belong to, from which I am sending you this email (e.g., @company.com).
-
-Thank you very much.`;
-
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const body = [
+      "Hello,",
+      "",
+      "By sending this email, you are requesting a verifiable credential.",
+      "The server will automatically issue a credential based on the domain of your email address (e.g., @company.com).",
+      "",
+      "No further action is needed — simply send this message.",
+      "",
+      "Thank you!",
+    ].join("\n");
+    
+    
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailUrl, "_blank"); 
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-8rem)] bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="container mx-auto px-4 py-8">
+    <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-8.5rem)] bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
+          <img src="/logo-transparent.png" alt="logo" className="h-48 w-40 mx-auto my-auto py-4" />
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Welcome to ZK-Access
           </h1>

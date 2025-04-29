@@ -26,7 +26,7 @@ export default function Home() {
     <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-8.5rem)] bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <img src="/logo-transparent.png" alt="logo" className="h-48 w-40 mx-auto my-auto py-4" />
+          <img src="/isotipo-black-transparent.png" alt="logo" className="h-48 w-40 mx-auto my-auto py-4" />
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Welcome to ZK-Access
           </h1>

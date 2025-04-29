@@ -127,27 +127,27 @@ export class GmailService {
       to,
       subject: 'Your ZK-Access Credential QR Code',
       html: `
-<div style="min-height: 300px; font-family: sans-serif; padding: 20px; display: flex; justify-content: center;">
-  <div style="background-color: #f9f9f9; border-radius: 12px; padding: 24px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+<div style="width: 100%; background-color: #ffffff; padding: 20px 0;">
+  <table align="center" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #f9f9f9; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); font-family: sans-serif;">
+    <tr>
+      <td align="center" style="padding: 20px;">
+        <p style="margin-bottom: 12px;">
+          To use your credential, you need to install the Talao Wallet on your phone.<br/>
+          You can download it here:<br/>
+          <a href="https://talao.io/talao-wallet/" target="_blank" style="color: #3366cc;">https://talao.io/talao-wallet/</a>
+        </p>
 
-    <p style="margin-bottom: 12px;">
-      To use your credential, you need to install the Talao Wallet on your phone.<br/>
-      You can download it here:<br/>
-      <a href="https://talao.io/talao-wallet/" target="_blank" style="color: #3366cc;">https://talao.io/talao-wallet/</a>
-    </p>
+        <p style="margin-bottom: 20px;">
+          After installing the wallet, go to <strong>Settings</strong>, then <strong>Wallet Profile</strong>,<br/>
+          and select <strong>European Blockchain Services Infrastructure (EBSI v3.x)</strong> as your SSI Profile.
+        </p>
 
-    <p style="margin-bottom: 20px;">
-      After installing the wallet, go to <strong>Settings</strong>, then <strong>Wallet Profile</strong>,
-      and select <strong>European Blockchain Services Infrastructure (EBSI v3.x)</strong> as your SSI Profile.
-    </p>
+        <p style="margin-bottom: 10px;">Here is the QR code for your organization's credential:</p>
 
-    <p style="margin-bottom: 10px;">Here is the QR code for your organization's credential:</p>
-
-    <div style="width: 250px; height: 250px; margin: 0 auto;">
-      <img src="cid:qrcode" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
-    </div>
-
-  </div>
+        <img src="cid:qrcode" alt="QR Code" style="width: 250px; height: 250px; object-fit: contain;" />
+      </td>
+    </tr>
+  </table>
 </div>
       `,
       attachments: [

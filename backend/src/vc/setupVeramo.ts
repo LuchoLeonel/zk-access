@@ -28,14 +28,16 @@ import { CredentialPlugin } from '@veramo/credential-w3c'
 import { DIDResolverPlugin } from '@veramo/did-resolver'
 import { Resolver } from 'did-resolver'
 import { getResolver as ethrDidResolver } from 'ethr-did-resolver'
-import { getResolver as webDidResolver } from 'web-did-resolver'
+import { getResolver as keyDidResolver } from 'key-did-resolver';
+import { getResolver as webDidResolver } from 'web-did-resolver';
 
 // Storage plugin using TypeOrm
-import { Entities, KeyStore, DIDStore, PrivateKeyStore, migrations } from '@veramo/data-store'
+import { DataStore, KeyStore, DIDStore, PrivateKeyStore } from '@veramo/data-store'
 import dbConnection from 'src/db.connection'
 
 import { Provider } from 'ethers'
 import { ConfigService } from '@nestjs/config'
+import { KeyDIDProvider } from '@veramo/did-provider-key'
 
 // Create a factory function that takes ConfigService
 export const setupVeramoAgent = (configService: ConfigService) => {
@@ -57,15 +59,24 @@ export const setupVeramoAgent = (configService: ConfigService) => {
             }),
             new DIDManager({
                 store: new DIDStore(dbConnection),
-                defaultProvider: 'did:ethr:sepola',
-                providers: {},
-            }),
+                defaultProvider: 'did:key',
+                providers: {
+                    'did:key': new KeyDIDProvider({
+                        defaultKms: 'local',
+                        defaultOptions: {
+                            keyType: 'Secp256r1',
+                        },
+                    } as any),
+                },
+            }),            
             new DIDResolverPlugin({
                 resolver: new Resolver({
+                    ...keyDidResolver(),
                     ...webDidResolver(),
                 }),
             }),
-            new CredentialPlugin(),
+            new DataStore(dbConnection),
+            new CredentialPlugin()
         ],
     })
 }

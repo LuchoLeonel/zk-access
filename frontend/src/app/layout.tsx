@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "ZK-Access",
   description: "Obtén credenciales verificables usando ZK-Email",
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon.ico",
   },
 };
 

@@ -53,7 +53,7 @@ export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
-    <div className="sticky lg:static bg-gray-900 top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary py-3 px-2">
+    <div className="sticky lg:static bg-gray-900 top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-2">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center">
           <div className="sm:hidden dropdown">
@@ -77,6 +77,9 @@ export const Header = () => {
                 <HeaderMenuLinks />
               </ul>
             )}
+          </div>
+          <div className="w-16 h-16">
+            <img src="/logo-white.png" alt="logo" />
           </div>
           <ul className="hidden sm:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
             <HeaderMenuLinks />

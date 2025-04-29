@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as Imap from 'node-imap';
-import { simpleParser, ParsedMail } from 'mailparser';
 import { Stream } from 'stream';
+import * as nodemailer from 'nodemailer'; 
 
 @Injectable()
 export class GmailService {
   private readonly logger = new Logger(GmailService.name);
 
-  async getLatestUnreadEmail(): Promise<string | null> {
+  async fetchAllUnreadEmails(): Promise<string[]> {
     const user = process.env.GMAIL_USER;
     const password = process.env.GMAIL_APP_PASSWORD;
 
@@ -32,6 +32,8 @@ export class GmailService {
       });
 
     return new Promise((resolve, reject) => {
+      const emails: string[] = [];
+
       imap.once('ready', async () => {
         try {
           await openInbox();
@@ -46,12 +48,12 @@ export class GmailService {
             if (!results || results.length === 0) {
               this.logger.log('No hay correos no leídos');
               imap.end();
-              return resolve(null);
+              return resolve([]);
             }
 
-            const f = imap.fetch(results.slice(-1), { bodies: '', struct: true });
+            const f = imap.fetch(results, { bodies: '', struct: true });
 
-            f.on('message', msg => {
+            f.on('message', (msg, seqno) => {
               let rawEmail = '';
 
               msg.on('body', (stream) => {
@@ -61,18 +63,32 @@ export class GmailService {
                   rawEmail += chunk.toString('utf-8');
                 });
 
-                nodeStream.on('end', () => {
-                  this.logger.log('Correo capturado completo en formato RAW');
-                  imap.end();
-                  resolve(rawEmail); // ✅ raw .eml listo para zk-email
+                nodeStream.on('end', async () => {
+                  this.logger.log(`✅ Capturado email ${seqno}`);
+                  emails.push(rawEmail);
+                });
+              });
+
+              msg.once('attributes', (attrs) => {
+                // Marcar el mail como leído
+                imap.addFlags(attrs.uid, '\\Seen', (err) => {
+                  if (err) {
+                    this.logger.error(`Error marcando email ${seqno} como leído:`, err);
+                  }
                 });
               });
             });
 
             f.once('error', err => {
-              this.logger.error('Error al obtener el mensaje:', err);
+              this.logger.error('Error en fetch:', err);
               imap.end();
               reject(err);
+            });
+
+            f.once('end', () => {
+              this.logger.log(`📦 Capturados ${emails.length} emails.`);
+              imap.end();
+              resolve(emails);
             });
           });
         } catch (error) {
@@ -89,4 +105,51 @@ export class GmailService {
       imap.connect();
     });
   }
+
+  async sendEmail(qrCodeBase64: string, to: string) {
+    const user = process.env.GMAIL_USER;
+    const password = process.env.GMAIL_APP_PASSWORD;
+
+    if (!user || !password) {
+      throw new Error('GMAIL_USER or GMAIL_APP_PASSWORD is missing in .env');
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user,
+        pass: password,
+      },
+    });
+
+    const mailOptions = {
+      from: `"ZK-Access" <${user}>`,
+      to,
+      subject: 'Your ZK-Access QR Code',
+      html: `
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 300px;">
+          <p style="margin-bottom: 20px;">Here is your QR Code to access the event or service:</p>
+          <div style="width: 250px; height: 250px; display: flex; justify-content: center; align-items: center;">
+            <img src="cid:qrcode" style="width: 100%; height: 100%; object-fit: contain;" />
+          </div>
+        </div>
+      `,
+      attachments: [
+        {
+          filename: 'qrcode.png',
+          content: Buffer.from(qrCodeBase64, 'base64'), // 📎 lo arma desde el base64
+          cid: 'qrcode', // 👈 este cid es el que embebe la imagen en el HTML
+        },
+      ],
+    };
+
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      this.logger.log(`📤 Email enviado correctamente: ${info.messageId}`);
+    } catch (error) {
+      this.logger.error('❌ Error enviando el email:', error);
+      throw new Error('Failed to send email');
+    }
+  }
+
 }

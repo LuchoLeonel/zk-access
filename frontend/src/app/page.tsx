@@ -16,7 +16,7 @@ Thank you very much.`;
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-7rem)] bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-8rem)] bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">

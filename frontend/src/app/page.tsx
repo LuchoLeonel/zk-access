@@ -1,25 +1,18 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
+import Image from "next/image";"use client";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const handleRequestCredential = () => {
-    const email = "metacitizen.general@gmail.com";
-    const subject = "Verifiable Credential Request";
-    const body = [
-      "Hello,",
-      "",
-      "By sending this email, you are requesting a verifiable credential.",
-      "The server will automatically issue a credential based on the domain of your email address (e.g., @company.com).",
-      "",
-      "No further action is needed — simply send this message.",
-      "",
-      "Thank you!",
-    ].join("\n");
-    
-    
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(gmailUrl, "_blank"); 
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+    const redirectUri = encodeURIComponent(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI!);
+    const scope = encodeURIComponent("https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.email");
+    const state = uuidv4();
+  
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=online&prompt=consent&state=${state}`;
+  
+    window.location.href = oauthUrl;
   };
 
   return (
@@ -44,7 +37,7 @@ export default function Home() {
   
           <button
             onClick={handleRequestCredential}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105"
+            className="bg-gray-900 hover:bg-gray-900 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105"
           >
             Request Credential
           </button>

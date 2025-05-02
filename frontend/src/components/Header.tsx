@@ -79,7 +79,9 @@ export const Header = () => {
             )}
           </div>
           <div className="flex justify-center items-center w-16 h-16 ml-2">
-            <img src="/logo-white.png" alt="logo" />
+            <Link href="/">
+              <img src="/logo-white.png" alt="logo" />
+            </Link>
           </div>
           <ul className="hidden sm:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
             <HeaderMenuLinks />

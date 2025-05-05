@@ -38,6 +38,29 @@ export class WellKnownController {
           display: [{ name: "Email-Address", locale: "en-US" }],
         },
       },
+      zkBindings: {
+        signer: {
+          display: [{ name: "Signer", locale: "en-US" }],
+        },
+        credentialSubject: {
+          organization: {
+            hash: {
+              display: [{ name: "Organization-Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Organization-Signature", locale: "en-US" }],
+            }
+          },
+          email: {
+            hash: {
+              display: [{ name: "Email-Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Email-Signature", locale: "en-US" }],
+            }
+          }
+        }
+      }
     };
   }
 

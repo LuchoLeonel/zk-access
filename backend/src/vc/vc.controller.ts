@@ -99,12 +99,14 @@ export class VcOauthController {
 export class VcCredentialController {
   private readonly logger = new Logger(VcCredentialController.name);
   private readonly apiKey: string;
+  private readonly privateKeyBabyJub: string;
 
   constructor(
     private configService: ConfigService,
     private readonly vcService: VCService,
   ) {
     this.apiKey = this.configService.get<string>('API_KEY')!;
+    this.privateKeyBabyJub= this.configService.get<string>('PRIVATE_KEY_BABY_JUB')!;
   }
 
   @Post()
@@ -125,7 +127,7 @@ export class VcCredentialController {
       const decoded: any = jwt.verify(token, this.apiKey);
       const tokenIdentifier = decoded.identifier_token;
     
-      const verifiableCredential = await this.vcService.emitCredential(tokenIdentifier);
+      const verifiableCredential = await this.vcService.emitCredential(tokenIdentifier, this.privateKeyBabyJub);
 
       this.logger.log('✅ Credencial generada correctamente');
 
@@ -140,5 +142,24 @@ export class VcCredentialController {
     } catch (error) {
       return res.status(500);
     }
+  }
+
+  @Get('mock')
+  async issueMockCredential(@Res() res: Response) {
+    this.logger.log('⚙️ GET /credential/mock - Emitiendo credencial mockeada');
+
+      const organization = "Constata";
+      const email = "zk@constata.eu";
+
+      const credential = await this.vcService.emitMockCredential(organization, email, this.privateKeyBabyJub);
+
+      this.logger.log('✅ Credencial mockeada generada correctamente');
+
+      return res.json({
+        format: "jwt_vc",
+        credential: credential.proof.jwt,
+        c_nonce: "mock_nonce",
+        c_nonce_expires_in: 86400,
+      });
   }
 }

@@ -7,6 +7,8 @@ import { capitalize } from 'lodash';
 import { MyCredential } from './my-credential.entity';
 import * as QRCode from 'qrcode';
 import dbConnection from '../db.connection.js';
+import { convertHashToString, getPublicKeyBabyJub, poseidonHash, signDelegationWithVeramo, signWithEddsaBabyJub } from './utils';
+
 
 @Injectable()
 export class VCService {
@@ -53,13 +55,19 @@ export class VCService {
      * Emits a Verifiable Credential
      * @returns {Promise<string>} The DID of the credential
      */
-    async emitCredential(token: string) {
+    async emitCredential(token: string, privateKeyBabyJub: string) {
         const myCredential = (await dbConnection).getRepository(MyCredential);
         const credential = await myCredential.findOne({
           where: { token },
         });
         
+        const organization = credential?.organization;
+        const email = credential?.email;
         const identifier = await this.getOrCreateDidManager(this.agent);
+        const { signer_x, signer_y, signer_hex } = await getPublicKeyBabyJub(privateKeyBabyJub);
+
+        const organizationPoseidonHash = await poseidonHash("organization", organization!);
+        const emailPoseidonHash = await poseidonHash("email", email!);
 
         const credentialArgs: ICreateVerifiableCredentialArgs = {
             credential: {
@@ -68,6 +76,7 @@ export class VCService {
                     {
                     organization: "schema:organization",
                     email: "schema:email",
+                    zkBindings: "schema:zkBindings",
                     schema: "https://schema.org/",
                     type: "@type",
                     }
@@ -76,19 +85,90 @@ export class VCService {
                 issuer: {id: identifier.did},
                 issuanceDate: new Date().toISOString(),
                 credentialSubject: {
-                    id: `urn:uuid:${credential?.token}`,
-                    organization: credential?.organization,
-                    email: credential?.email
+                    id: `urn:uuid:${token}`,
+                    organization,
+                    email,
+                },
+                circuitInputs: {
+                  delegation: {
+                    did: identifier.did,
+                    signer_x,
+                    signer_y,
+                    signature: await signDelegationWithVeramo(this.agent, signer_hex)
+                  },
+                  credentialSubject: {
+                    organization: {
+                      hash: await convertHashToString(organizationPoseidonHash),
+                      signature: await signWithEddsaBabyJub(organizationPoseidonHash, privateKeyBabyJub)
+                    },
+                    email: {
+                      hash: await convertHashToString(emailPoseidonHash),
+                      signature: await signWithEddsaBabyJub(emailPoseidonHash, privateKeyBabyJub)
+                    }
+                  }
                 }
             },
-            save: true,
             proofFormat: 'jwt'
         }
 
         const verifiableCredential = await this.agent.createVerifiableCredential(credentialArgs);
         return verifiableCredential;
     }
+    async emitMockCredential(organization: string, email: string, privateKeyBabyJub: string) {
+      const identifier = await this.getOrCreateDidManager(this.agent);
+      const token = uuidv4(); // para generar un id único
+      const { signer_x, signer_y, signer_hex } = await getPublicKeyBabyJub(privateKeyBabyJub);
 
+      const organizationPoseidonHash = await poseidonHash("organization", organization!);
+      const emailPoseidonHash = await poseidonHash("email", email!);
+
+
+      const credentialArgs: ICreateVerifiableCredentialArgs = {
+        credential: {
+          "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            {
+              organization: "schema:organization",
+              email: "schema:email",
+              zkBindings: "https://example.org/zkBindings",
+              schema: "https://schema.org/",
+              type: "@type",
+            }
+          ],
+          type: ['VerifiableCredential', 'ZKAccess'],
+          issuer: { id: identifier.did },
+          issuanceDate: new Date().toISOString(),
+          credentialSubject: {
+            id: `urn:uuid:${token}`,
+            organization,
+            email,
+          },
+          circuitInputs: {
+            delegation: {
+              did: identifier.did,
+              signer_x,
+              signer_y,
+              signature: await signDelegationWithVeramo(this.agent, signer_hex)
+            },
+            credentialSubject: {
+              organization: {
+                hash: await convertHashToString(organizationPoseidonHash),
+                signature: await signWithEddsaBabyJub(organizationPoseidonHash, privateKeyBabyJub)
+              },
+              email: {
+                hash: await convertHashToString(emailPoseidonHash),
+                signature: await signWithEddsaBabyJub(emailPoseidonHash, privateKeyBabyJub)
+              }
+            }
+          }
+        },
+        proofFormat: 'jwt'
+      };
+    
+      const verifiableCredential = await this.agent.createVerifiableCredential(credentialArgs);
+      return verifiableCredential;
+    }
+    
 
     async getOrCreateDidManager(agent: any, alias = 'default'): Promise<IIdentifier> {
         try {

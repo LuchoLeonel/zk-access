@@ -32,7 +32,7 @@ import { getResolver as keyDidResolver } from 'key-did-resolver';
 import { getResolver as webDidResolver } from 'web-did-resolver';
 
 // Storage plugin using TypeOrm
-import { DataStore, KeyStore, DIDStore, PrivateKeyStore } from '@veramo/data-store'
+import { KeyStore, DIDStore, PrivateKeyStore } from '@veramo/data-store'
 import dbConnection from 'src/db.connection'
 
 import { Provider } from 'ethers'
@@ -75,7 +75,6 @@ export const setupVeramoAgent = (configService: ConfigService) => {
                     ...webDidResolver(),
                 }),
             }),
-            new DataStore(dbConnection),
             new CredentialPlugin()
         ],
     })

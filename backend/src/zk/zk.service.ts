@@ -3,7 +3,9 @@ import { GmailService } from '../gmail/gmail.service';
 import { VCService } from '../vc/vc.service';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import zkEmailSdk from '@zk-email/sdk';
-import { join } from 'path';
+  import { join } from 'path';
+
+const BLUEPRINT = "LuchoLeonel/ZkAccess@v1";
 
 @Injectable()
 export class ZkEmailProcessorService implements OnModuleInit {
@@ -55,7 +57,7 @@ export class ZkEmailProcessorService implements OnModuleInit {
           const emailAddress = (proof as any).props.publicData.email_sender[0];
           const organization = this.vcService.getDomainFromEmail(emailAddress);
 
-          const credential = await this.vcService.createCredentialAndGetToken(emailAddress, organization);
+          const credential = await this.vcService.createCredentialAndGetToken({emailAddress, organization});
           const qrCode = await this.vcService.generateQR(credential);
 
           await this.gmailService.sendEmail(qrCode, emailAddress);
@@ -88,7 +90,7 @@ export class ZkEmailProcessorService implements OnModuleInit {
     const sdk = zkEmailSdk();
 
     this.logger.log('📦 Obteniendo blueprint...');
-    const blueprint = await sdk.getBlueprint('LuchoLeonel/VerifiableCredentialCheck@v9');
+    const blueprint = await sdk.getBlueprint(BLUEPRINT);
 
     const prover = blueprint.createProver();
 
@@ -101,4 +103,65 @@ export class ZkEmailProcessorService implements OnModuleInit {
     this.logger.log(`✅ Proof verified: ${isValid}`);
     return { proof, isValid };
   }
+}
+
+
+@Injectable()
+export class ZkService {
+  private readonly logger = new Logger(ZkEmailProcessorService.name);
+
+  constructor(
+    private readonly vcService: VCService,
+  ) {}
+
+  async verifyCombinedProofs(zkEmailProof: any, zkPassportProof: any) {
+
+    const sdk = zkEmailSdk();
+    const blueprint = await sdk.getBlueprint(BLUEPRINT);
+    const isValid = await blueprint.verifyProof(zkEmailProof);
+
+    if (!isValid) {
+      return { success: false, reason: 'Invalid zkEmail proof' };
+    }
+
+    const publicData = (zkEmailProof as any).props.publicData;
+    const subject = publicData.subject?.[0] ?? '';
+    const emailSender = publicData.email_sender?.[0] ?? '';
+    const emailDomain = publicData.sender_domain?.[0] ?? '';
+    const maybeDomain = this.vcService.getDomainFromEmail(emailSender);
+    console.log({maybeDomain, emailDomain, emailSender, subject});
+    if (maybeDomain !== emailDomain) {
+      return { success: false, reason: 'Invalid Domain' };
+    }
+    const { email, role, organization } = this.parseSubject(subject);
+    
+    const params = {email, role, organization, ...zkPassportProof}
+    const credential = await this.vcService.createCredentialAndGetToken(params);
+    const qrCode = await this.vcService.generateQR(credential);
+
+    return { qrCode };
+  }
+
+
+  parseSubject(subject: string): {
+    organization: string;
+    role: string;
+    email: string;
+  } {
+    const result: Record<string, string> = {};
+  
+    subject.split(';').forEach((pair) => {
+      const [key, value] = pair.trim().split('=');
+      if (key && value) {
+        result[key.trim().toLowerCase()] = value.trim();
+      }
+    });
+  
+    return {
+      organization: result.organization ?? '',
+      role: result.role ?? '',
+      email: result.email ?? '',
+    };
+  }
+  
 }

@@ -21,14 +21,21 @@ export class VCService {
         this.baseUrl = this.configService.get<string>('BASE_URL')!;
     }
 
-    async createCredentialAndGetToken(email: string, organization: string): Promise<MyCredential> {
+    async createCredentialAndGetToken(params: any): Promise<MyCredential> {
       let credential = new MyCredential();
       try{
         // Create a new token
         credential.token = uuidv4();  // Generates a unique token
         credential.used = false;
-        credential.email = email;
-        credential.organization = organization;
+        credential.email = params.email;
+        credential.organization = params.organization;
+        credential.role = params.role;
+        credential.firstname = params.firstname;
+        credential.lastname = params.lastname;
+        credential.birthdate = params.birthdate;
+        credential.nationality = params.nationality;
+        credential.documentType = params.documentType;
+        credential.documentNumber = params.documentNumber;
         credential.credentialId = uuidv4();
         const myCredential = (await dbConnection).getRepository(MyCredential);
         await myCredential.save(credential);
@@ -56,73 +63,41 @@ export class VCService {
      * @returns {Promise<string>} The DID of the credential
      */
     async emitCredential(token: string, privateKeyBabyJub: string) {
-        const myCredential = (await dbConnection).getRepository(MyCredential);
-        const credential = await myCredential.findOne({
-          where: { token },
-        });
-        
-        const organization = credential?.organization;
-        const email = credential?.email;
-        const identifier = await this.getOrCreateDidManager(this.agent);
-        const { signer_x, signer_y, signer_hex } = await getPublicKeyBabyJub(privateKeyBabyJub);
+      const myCredential = (await dbConnection).getRepository(MyCredential);
+      const credential = await myCredential.findOne({
+        where: { token },
+      });
+    
+      if (!credential) throw new Error('Credential not found');
+    
+      const {
+        organization,
+        email,
+        role,
+        firstname,
+        lastname,
+        birthdate,
+        nationality,
+        documentType,
+        documentNumber,
+      } = credential;
 
-        const organizationPoseidonHash = await poseidonHash("organization", organization!);
-        const emailPoseidonHash = await poseidonHash("email", email!);
 
-        const credentialArgs: ICreateVerifiableCredentialArgs = {
-            credential: {
-                "@context": [
-                    "https://www.w3.org/2018/credentials/v1",
-                    {
-                    organization: "schema:organization",
-                    email: "schema:email",
-                    zkBindings: "schema:zkBindings",
-                    schema: "https://schema.org/",
-                    type: "@type",
-                    }
-                ],
-                type: ['VerifiableCredential', 'ZKAccess'],
-                issuer: {id: identifier.did},
-                issuanceDate: new Date().toISOString(),
-                credentialSubject: {
-                    id: `urn:uuid:${token}`,
-                    organization,
-                    email,
-                },
-                circuitInputs: {
-                  delegation: {
-                    did: identifier.did,
-                    signer_x,
-                    signer_y,
-                    signature: await signDelegationWithVeramo(this.agent, signer_hex)
-                  },
-                  credentialSubject: {
-                    organization: {
-                      hash: await convertHashToString(organizationPoseidonHash),
-                      signature: await signWithEddsaBabyJub(organizationPoseidonHash, privateKeyBabyJub)
-                    },
-                    email: {
-                      hash: await convertHashToString(emailPoseidonHash),
-                      signature: await signWithEddsaBabyJub(emailPoseidonHash, privateKeyBabyJub)
-                    }
-                  }
-                }
-            },
-            proofFormat: 'jwt'
-        }
-
-        const verifiableCredential = await this.agent.createVerifiableCredential(credentialArgs);
-        return verifiableCredential;
-    }
-    async emitMockCredential(organization: string, email: string, privateKeyBabyJub: string) {
+    
       const identifier = await this.getOrCreateDidManager(this.agent);
-      const token = uuidv4(); // para generar un id único
       const { signer_x, signer_y, signer_hex } = await getPublicKeyBabyJub(privateKeyBabyJub);
-
+    
+      // 🔐 Hasheos Poseidon + firmas
       const organizationPoseidonHash = await poseidonHash("organization", organization!);
       const emailPoseidonHash = await poseidonHash("email", email!);
-
-
+      const rolePoseidonHash = await poseidonHash("role", role!);
+      const firstnamePoseidonHash = await poseidonHash("firstname", firstname!);
+      const lastnamePoseidonHash = await poseidonHash("lastname", lastname!);
+      const birthdatePoseidonHash = await poseidonHash("birthdate", birthdate!);
+      const nationalityPoseidonHash = await poseidonHash("nationality", nationality!);
+      const documentTypePoseidonHash = await poseidonHash("documentType", documentType!);
+      const documentNumberPoseidonHash = await poseidonHash("documentNumber", documentNumber!);
+    
       const credentialArgs: ICreateVerifiableCredentialArgs = {
         credential: {
           "@context": [
@@ -130,6 +105,129 @@ export class VCService {
             {
               organization: "schema:organization",
               email: "schema:email",
+              role: "schema:role",
+              firstname: "schema:givenName",
+              lastname: "schema:familyName",
+              birthdate: "schema:birthDate",
+              nationality: "schema:nationality",
+              documentType: "schema:documentType",
+              documentNumber: "schema:documentNumber",
+              zkBindings: "schema:zkBindings",
+              schema: "https://schema.org/",
+              type: "@type",
+            }
+          ],
+          type: ['VerifiableCredential', 'ZKAccess'],
+          issuer: { id: identifier.did },
+          issuanceDate: new Date().toISOString(),
+          credentialSubject: {
+            id: `urn:uuid:${token}`,
+            organization,
+            email,
+            firstname,
+            lastname,
+            birthdate,
+            nationality,
+            documentType,
+            documentNumber,
+          },
+          circuitInputs: {
+            delegation: {
+              did: identifier.did,
+              signer_x,
+              signer_y,
+              signature: await signDelegationWithVeramo(this.agent, signer_hex),
+            },
+            credentialSubject: {
+              organization: {
+                hash: await convertHashToString(organizationPoseidonHash),
+                signature: await signWithEddsaBabyJub(organizationPoseidonHash, privateKeyBabyJub)
+              },
+              email: {
+                hash: await convertHashToString(emailPoseidonHash),
+                signature: await signWithEddsaBabyJub(emailPoseidonHash, privateKeyBabyJub)
+              },
+              role: {
+                hash: await convertHashToString(rolePoseidonHash),
+                signature: await signWithEddsaBabyJub(rolePoseidonHash, privateKeyBabyJub)
+              },
+              firstname: {
+                hash: await convertHashToString(firstnamePoseidonHash),
+                signature: await signWithEddsaBabyJub(firstnamePoseidonHash, privateKeyBabyJub)
+              },
+              lastname: {
+                hash: await convertHashToString(lastnamePoseidonHash),
+                signature: await signWithEddsaBabyJub(lastnamePoseidonHash, privateKeyBabyJub)
+              },
+              birthdate: {
+                hash: await convertHashToString(birthdatePoseidonHash),
+                signature: await signWithEddsaBabyJub(birthdatePoseidonHash, privateKeyBabyJub)
+              },
+              nationality: {
+                hash: await convertHashToString(nationalityPoseidonHash),
+                signature: await signWithEddsaBabyJub(nationalityPoseidonHash, privateKeyBabyJub)
+              },
+              documentType: {
+                hash: await convertHashToString(documentTypePoseidonHash),
+                signature: await signWithEddsaBabyJub(documentTypePoseidonHash, privateKeyBabyJub)
+              },
+              documentNumber: {
+                hash: await convertHashToString(documentNumberPoseidonHash),
+                signature: await signWithEddsaBabyJub(documentNumberPoseidonHash, privateKeyBabyJub)
+              }
+            }
+          }
+        },
+        proofFormat: 'jwt'
+      };
+    
+      const verifiableCredential = await this.agent.createVerifiableCredential(credentialArgs);
+      return verifiableCredential;
+    }
+    
+
+    async emitMockCredential(mockValues: any, privateKeyBabyJub: string) {
+      const identifier = await this.getOrCreateDidManager(this.agent);
+      const token = uuidv4();
+      const { signer_x, signer_y, signer_hex } = await getPublicKeyBabyJub(privateKeyBabyJub);
+    
+      const {
+        organization,
+        email,
+        role,
+        firstname,
+        lastname,
+        birthdate,
+        nationality,
+        documentType,
+        documentNumber,
+      } = mockValues;
+    
+      // 🔐 Hasheos Poseidon
+      const organizationPoseidonHash = await poseidonHash("organization", organization);
+      const emailPoseidonHash = await poseidonHash("email", email);
+      const rolePoseidonHash = await poseidonHash("role", role);
+      const firstnamePoseidonHash = await poseidonHash("firstname", firstname);
+      const lastnamePoseidonHash = await poseidonHash("lastname", lastname);
+      const birthdatePoseidonHash = await poseidonHash("birthdate", birthdate);
+      const nationalityPoseidonHash = await poseidonHash("nationality", nationality);
+      const documentTypePoseidonHash = await poseidonHash("documentType", documentType);
+      const documentNumberPoseidonHash = await poseidonHash("documentNumber", documentNumber);
+    
+      const credentialArgs: ICreateVerifiableCredentialArgs = {
+        credential: {
+          "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            {
+              organization: "schema:organization",
+              email: "schema:email",
+              role: "schema:role",
+              firstname: "schema:givenName",
+              lastname: "schema:familyName",
+              birthdate: "schema:birthDate",
+              nationality: "schema:nationality",
+              documentType: "schema:documentType",
+              documentNumber: "schema:documentNumber",
               zkBindings: "https://example.org/zkBindings",
               schema: "https://schema.org/",
               type: "@type",
@@ -142,6 +240,13 @@ export class VCService {
             id: `urn:uuid:${token}`,
             organization,
             email,
+            role,
+            firstname,
+            lastname,
+            birthdate,
+            nationality,
+            documentType,
+            documentNumber,
           },
           circuitInputs: {
             delegation: {
@@ -158,6 +263,34 @@ export class VCService {
               email: {
                 hash: await convertHashToString(emailPoseidonHash),
                 signature: await signWithEddsaBabyJub(emailPoseidonHash, privateKeyBabyJub)
+              },
+              role: {
+                hash: await convertHashToString(rolePoseidonHash),
+                signature: await signWithEddsaBabyJub(rolePoseidonHash, privateKeyBabyJub)
+              },
+              firstname: {
+                hash: await convertHashToString(firstnamePoseidonHash),
+                signature: await signWithEddsaBabyJub(firstnamePoseidonHash, privateKeyBabyJub)
+              },
+              lastname: {
+                hash: await convertHashToString(lastnamePoseidonHash),
+                signature: await signWithEddsaBabyJub(lastnamePoseidonHash, privateKeyBabyJub)
+              },
+              birthdate: {
+                hash: await convertHashToString(birthdatePoseidonHash),
+                signature: await signWithEddsaBabyJub(birthdatePoseidonHash, privateKeyBabyJub)
+              },
+              nationality: {
+                hash: await convertHashToString(nationalityPoseidonHash),
+                signature: await signWithEddsaBabyJub(nationalityPoseidonHash, privateKeyBabyJub)
+              },
+              documentType: {
+                hash: await convertHashToString(documentTypePoseidonHash),
+                signature: await signWithEddsaBabyJub(documentTypePoseidonHash, privateKeyBabyJub)
+              },
+              documentNumber: {
+                hash: await convertHashToString(documentNumberPoseidonHash),
+                signature: await signWithEddsaBabyJub(documentNumberPoseidonHash, privateKeyBabyJub)
               }
             }
           }
@@ -168,6 +301,7 @@ export class VCService {
       const verifiableCredential = await this.agent.createVerifiableCredential(credentialArgs);
       return verifiableCredential;
     }
+    
     
 
     async getOrCreateDidManager(agent: any, alias = 'default'): Promise<IIdentifier> {
@@ -196,9 +330,7 @@ export class VCService {
       if (!email.includes('@')) throw new UnauthorizedException('Invalid email address');
     
       const domainPart = email.split('@')[1];
-      const domain = domainPart.split('.')[0];
-      
-      return capitalize(domain);
+      return domainPart.trim().toLowerCase();
     }
 
     async verifyToken(token: string): Promise<boolean> {

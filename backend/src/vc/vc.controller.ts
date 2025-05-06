@@ -148,10 +148,20 @@ export class VcCredentialController {
   async issueMockCredential(@Res() res: Response) {
     this.logger.log('⚙️ GET /credential/mock - Emitiendo credencial mockeada');
 
-      const organization = "Constata";
-      const email = "zk@constata.eu";
+    const mockValues = {
+      organization: "Constata",
+      email: "zk@constata.eu",
+      role: "Developer",
+      firstname: "Luciano",
+      lastname: "Carreño",
+      birthdate: "1995-04-20",
+      nationality: "Argentinian",
+      documentType: "DNI",
+      documentNumber: "12345678",
+    };
+  
 
-      const credential = await this.vcService.emitMockCredential(organization, email, this.privateKeyBabyJub);
+      const credential = await this.vcService.emitMockCredential(mockValues, this.privateKeyBabyJub);
 
       this.logger.log('✅ Credencial mockeada generada correctamente');
 

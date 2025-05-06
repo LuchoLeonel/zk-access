@@ -10,7 +10,7 @@ export class WellKnownController {
 
   constructor(private configService: ConfigService) {
     this.baseUrl = this.configService.get<string>('BASE_URL')!;
-
+  
     this.zkAccess = {
       id: "ZKAccess",
       format: "jwt_vc",
@@ -35,7 +35,28 @@ export class WellKnownController {
           display: [{ name: "Organization", locale: "en-US" }],
         },
         email: {
-          display: [{ name: "Email-Address", locale: "en-US" }],
+          display: [{ name: "Email Address", locale: "en-US" }],
+        },
+        role: {
+          display: [{ name: "Role", locale: "en-US" }],
+        },
+        firstname: {
+          display: [{ name: "First Name", locale: "en-US" }],
+        },
+        lastname: {
+          display: [{ name: "Last Name", locale: "en-US" }],
+        },
+        birthdate: {
+          display: [{ name: "Birthdate", locale: "en-US" }],
+        },
+        nationality: {
+          display: [{ name: "Nationality", locale: "en-US" }],
+        },
+        documentType: {
+          display: [{ name: "Document Type", locale: "en-US" }],
+        },
+        documentNumber: {
+          display: [{ name: "Document Number", locale: "en-US" }],
         },
       },
       zkBindings: {
@@ -45,25 +66,82 @@ export class WellKnownController {
         credentialSubject: {
           organization: {
             hash: {
-              display: [{ name: "Organization-Hash", locale: "en-US" }],
+              display: [{ name: "Organization Hash", locale: "en-US" }],
             },
             signature: {
-              display: [{ name: "Organization-Signature", locale: "en-US" }],
+              display: [{ name: "Organization Signature", locale: "en-US" }],
             }
           },
           email: {
             hash: {
-              display: [{ name: "Email-Hash", locale: "en-US" }],
+              display: [{ name: "Email Hash", locale: "en-US" }],
             },
             signature: {
-              display: [{ name: "Email-Signature", locale: "en-US" }],
+              display: [{ name: "Email Signature", locale: "en-US" }],
+            }
+          },
+          role: {
+            hash: {
+              display: [{ name: "Role Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Role Signature", locale: "en-US" }],
+            }
+          },
+          firstname: {
+            hash: {
+              display: [{ name: "First Name Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "First Name Signature", locale: "en-US" }],
+            }
+          },
+          lastname: {
+            hash: {
+              display: [{ name: "Last Name Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Last Name Signature", locale: "en-US" }],
+            }
+          },
+          birthdate: {
+            hash: {
+              display: [{ name: "Birthdate Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Birthdate Signature", locale: "en-US" }],
+            }
+          },
+          nationality: {
+            hash: {
+              display: [{ name: "Nationality Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Nationality Signature", locale: "en-US" }],
+            }
+          },
+          documentType: {
+            hash: {
+              display: [{ name: "Document Type Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Document Type Signature", locale: "en-US" }],
+            }
+          },
+          documentNumber: {
+            hash: {
+              display: [{ name: "Document Number Hash", locale: "en-US" }],
+            },
+            signature: {
+              display: [{ name: "Document Number Signature", locale: "en-US" }],
             }
           }
         }
       }
     };
   }
-
+  
+  
   @Get('oauth-authorization-server')
   getOauthMetadata() {
     this.logger.log("Reviso config oauth-authorization-server");

@@ -18,5 +18,26 @@ export class MyCredential {
   email: string = '';
 
   @Column({ nullable: true })
+  role: string = '';
+
+  @Column({ nullable: true })
+  firstname: string = '';
+
+  @Column({ nullable: true })
+  lastname: string = '';
+
+  @Column({ nullable: true })
+  birthdate: string = '';
+
+  @Column({ nullable: true })
+  nationality: string = '';
+
+  @Column({ nullable: true })
+  documentType: string = '';
+
+  @Column({ nullable: true })
+  documentNumber: string = '';
+
+  @Column({ nullable: true })
   credentialId: string = '';
 }

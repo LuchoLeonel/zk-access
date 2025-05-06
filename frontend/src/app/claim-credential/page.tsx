@@ -27,7 +27,7 @@ export default function ClaimCredentialPage() {
           <img
             src={`data:image/png;base64,${qrCode}`}
             alt="QR Code"
-            className="w-64 h-64 mx-auto border border-gray-300 rounded"
+            className="w-64 h-64 mx-auto border border-gray-300 rounded mb-2"
           />
         ) : (
           <div className="text-blue-600 text-sm font-medium tracking-wide">

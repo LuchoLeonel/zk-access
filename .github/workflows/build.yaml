@@ -1,7 +1,7 @@
 name: Build & Deploy
 env:
-  IMAGE_TAG_BACKEND: ghcr.io/LuchoLeonel/zk-access/backend
-  IMAGE_TAG_FRONTEND_USERS: ghcr.io/LuchoLeonel/zk-access/frontend
+  IMAGE_TAG_BACKEND: ghcr.io/lucholeonel/zk-access/backend
+  IMAGE_TAG_FRONTEND_USERS: ghcr.io/lucholeonel/zk-access/frontend
 
   IMAGE_VERSION: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
   NEXT_PUBLIC_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}

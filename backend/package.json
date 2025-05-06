@@ -35,7 +35,6 @@
     "@types/mailparser": "^3.4.5",
     "@types/node-imap": "^0.9.3",
     "@veramo/core": "^6.0.0",
-    "@veramo/credential-ld": "^6.0.0",
     "@veramo/credential-w3c": "^6.0.0",
     "@veramo/data-store": "^6.0.0",
     "@veramo/did-manager": "^6.0.0",

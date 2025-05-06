@@ -1,7 +1,7 @@
 name: Build & Deploy
 env:
   IMAGE_TAG_BACKEND: ghcr.io/lucholeonel/zk-access/backend
-  IMAGE_TAG_FRONTEND_USERS: ghcr.io/lucholeonel/zk-access/frontend
+  IMAGE_TAG_FRONTEND: ghcr.io/lucholeonel/zk-access/frontend
 
   IMAGE_VERSION: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
   NEXT_PUBLIC_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
@@ -74,7 +74,7 @@ jobs:
           context: ./frontend/
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{env.IMAGE_TAG_FRONTEND_USERS}}:${{env.IMAGE_VERSION}}
+          tags: ${{env.IMAGE_TAG_FRONTEND}}:${{env.IMAGE_VERSION}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args:

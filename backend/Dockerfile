@@ -9,6 +9,9 @@ RUN corepack enable \
     && corepack prepare yarn@3.2.3 --activate \
     && yarn set version 3.2.3
 
+# Instalar git
+RUN apt-get update && apt-get install -y git
+
 COPY . .
 
 # Instalar dependencias sin modificar yarn.lock

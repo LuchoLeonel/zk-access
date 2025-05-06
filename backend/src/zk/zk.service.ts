@@ -129,7 +129,6 @@ export class ZkService {
     const emailSender = publicData.email_sender?.[0] ?? '';
     const emailDomain = publicData.sender_domain?.[0] ?? '';
     const maybeDomain = this.vcService.getDomainFromEmail(emailSender);
-    console.log({maybeDomain, emailDomain, emailSender, subject});
     if (maybeDomain !== emailDomain) {
       return { success: false, reason: 'Invalid Domain' };
     }

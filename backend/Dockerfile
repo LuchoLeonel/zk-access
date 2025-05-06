@@ -9,8 +9,13 @@ RUN corepack enable \
     && corepack prepare yarn@3.2.3 --activate \
     && yarn set version 3.2.3
 
-# Instalar git
-RUN apt-get update && apt-get install -y git
+# Instalar paquetes
+RUN apt-get update && apt-get install -y \
+  git \
+  python3 \
+  make \
+  g++ \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 

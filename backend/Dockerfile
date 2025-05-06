@@ -12,7 +12,7 @@ RUN corepack enable \
 COPY . .
 
 # Instalar dependencias sin modificar yarn.lock
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Compilar la app NestJS
 RUN yarn build

@@ -124,6 +124,7 @@ export class VCService {
             id: `urn:uuid:${token}`,
             organization,
             email,
+            role,
             firstname,
             lastname,
             birthdate,

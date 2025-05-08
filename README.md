@@ -271,10 +271,16 @@ cd circuit
 nargo execute
 ```
 
-Remember that `keys`, `values`, and `compared_values` strings are converted with this function before being passed to the circuit:
+Remember that `keys`, `values`, and `compared_values` strings are converted to `BigInt` with this function before being passed to the circuit:
 
 ```javascript
 const keyBigInt = BigInt('0x' + Buffer.from(key).toString('hex'));
+```
+
+Additionally, for nested fields, the keys are combined before being converted to `BigInt`. For example:
+
+```
+const key = `offerAc[${index}].offer`;
 ```
 
 ---

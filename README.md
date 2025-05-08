@@ -267,6 +267,7 @@ Visit `http://localhost:3000` — and click “Start Demo”.
 If you'd like to manually play with the circuit inputs for the credentials, you can modify or add data in the `Prover.toml` file. After making changes, execute the following command to run the circuit:
 
 ```bash
+cd circuit
 nargo execute
 ```
 

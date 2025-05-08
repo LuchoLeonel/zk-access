@@ -1,17 +1,17 @@
 import { create } from 'zustand';
 
 type ProofStore = {
-  proof: any | null;
+  proofs: any[]; // en vez de `proof: any | null`
   qrCode: string | null;
-  setProof: (proof: any) => void;
-  resetProof: () => void;
+  setProofs: (proofs: any[]) => void;
+  resetProofs: () => void;
   setQrCode: (url: string) => void;
 };
 
 export const useProofStore = create<ProofStore>((set) => ({
-  proof: null,
+  proofs: [],
   qrCode: null,
-  setProof: (proof) => set({ proof }),
-  resetProof: () => set({ proof: null, qrCode: null }),
+  setProofs: (proofs) => set({ proofs }),
+  resetProofs: () => set({ proofs: [], qrCode: null }),
   setQrCode: (url) => set({ qrCode: url }),
 }));

@@ -1,0 +1,96 @@
+Delivered-To: zk.access.general@gmail.com
+Received: by 2002:a05:6504:2346:b0:291:c020:42bd with SMTP id o6csp325921ltx;
+        Wed, 7 May 2025 23:08:50 -0700 (PDT)
+X-Received: by 2002:a05:690c:6c8a:b0:6fd:97a7:1474 with SMTP id 00721157ae682-70a1d9f9351mr95368567b3.11.1746684530321;
+        Wed, 07 May 2025 23:08:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1746684530; cv=none;
+        d=google.com; s=arc-20240605;
+        b=A/XZwfsGnrYuJ4AZ5XVTVsG7K6UWPAvqSBHnqFC6aTiZFtRANREMILIbVdtY3gHyEo
+         HzYNPXx1Hxsd77Pz1NES0rvKMi7BkqqdR6JnMk5B3F8snM4MR1bsGeGpL/fOVsmIgkit
+         sQUbQ8YEDQ1hOnJSstSjyTW0XsLt7HX7wv7TwaSlZR/YutMnRRjtL03DYJp6vM7VHA8e
+         xoOGkLaAVGuJEMBbU464GmSoc8053F2+/X9voi+0silu5hY852z75t8hNoDF9eIfChaI
+         WBDU2jR7BAF+isKAjMZLBDRYIvg1Ab+wWQwu7t8xcR1lZwZEqwcwqtmbw9mQPSBGaw9s
+         9vkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=YAMB2ZxKp7Nu7pHPSLx4MTl9vmPhgYsCywkuiqmecV0=;
+        fh=1DPc8kHs/1kdNQzhm5YFZqHveQmWKarw2abxOVZ/mFk=;
+        b=bJ/NdkIwkQC83UOg6z2EjZfzOlalSelebg2xY3SOGmF0ndo1aVQ6RPB0cdfdvv7k8j
+         ICURAngJ5zaZU101Ke0R3dAtuB8DRIJqYh1qki59kE2sYAGf19AOUWm1L5nC13a6nUys
+         yOVGUv+IQanioeMFIJJ/kmx9xmjYXhpWlvzF7j9LBCrgL5GVmT7udt2QeCsrFQP/3ubT
+         fI3ORvndxGmx+8kLFs7NRTcZtROf+J3RqaM2q9Dl9/90JHSwiCcpYsprWNDmnvGxlWdk
+         aLPfh68bw4RsJRpo11IOwZwDYn3WEHumw8dit1z7xllrgH96KCUYPUoDTj1oACulMdf/
+         YS8A==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=VVi++rrX;
+       spf=pass (google.com: domain of sami.ai.agent@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=sami.ai.agent@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+Return-Path: <sami.ai.agent@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id 00721157ae682-708c38e47b7sor44625047b3.0.2025.05.07.23.08.50
+        for <zk.access.general@gmail.com>
+        (Google Transport Security);
+        Wed, 07 May 2025 23:08:50 -0700 (PDT)
+Received-SPF: pass (google.com: domain of sami.ai.agent@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=VVi++rrX;
+       spf=pass (google.com: domain of sami.ai.agent@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=sami.ai.agent@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746684530; x=1747289330; dara=google.com;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YAMB2ZxKp7Nu7pHPSLx4MTl9vmPhgYsCywkuiqmecV0=;
+        b=VVi++rrX+Ae2vJuhB7hCGhnlpHF4u4S19w31GjYxZByVGt9d3ad6gj9ekJbv/YJr+O
+         OkAnSOeMGSntPqciHfqtrMs8DGj7KlzRhcuoPcPwOsnjO3rWk6Wuemf9dku4nAVX/Tht
+         qDHbyx6rAAEKdBICvt9Hde8C4Qh8+kGStXdaN490uWEqAtDSjzo8+8qxjsaqAcpuvmit
+         Nyi7EyNQ416wXttZ0EuZzhYVCOofWLnbp6K1EMdxUJvFo0kmpp85cDNOtt9goSs7sJPs
+         7QrA2iJ76hlCRWCJjQ1pwuRAlR/oXVX/9hSpSBv/dlPfzL+Uy0bBTkRVaJ0AaTBVEHzc
+         nMkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746684530; x=1747289330;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YAMB2ZxKp7Nu7pHPSLx4MTl9vmPhgYsCywkuiqmecV0=;
+        b=o0g2PeXbl4r++DYAlP2p8OPbjYs21zd0wx9B95bSzf+aFKYH9T5PecziMizC03dpEe
+         PxRxwoj05o1MycjdUA2B9bI93LT2bfx67jmCdV1cNsSYEWt61+dpPdA2sG5PqBKK9hf9
+         6JvqeQXUIpV741MTjZK9hRMHwjVYlirq9AOiqWxMVciidtBPeb//yqTyF/vzbDqkn+eo
+         AfAtVFMKXSYF+96If81T7E/XtyqL4SFjQrWaGWbw6kIFEyhPzREbn4wXEfklR499GVPr
+         HOSvbOFvRfrWRTMcxjJKlZwOPgVNsB9o36Tv3IIWRRBsblxjnguancXYXTXqGgdOs4XJ
+         MHOg==
+X-Gm-Message-State: AOJu0Yz8bhLkUvXAVPqAOqMyjzI4M5n0UzOMyKNjtft/hWjWO5Ltirm3
+	8EXbDwz+U8HyEOaR2kMY6wVy7hDh6olU+oM6JsqRgtPdFec7A4Kax6gL2JUcQ66E7kkukDA1W5P
+	EKbHFXUCJtPO5h/+dzhu5U4XwpIvD4/dW
+X-Gm-Gg: ASbGnctFwV/giwjqEfATj0K5imMG7ZEN6H9xlVUBtBUnVnQtHo4cD51LRu5X0pQ8lu+
+	BB5fI4xEj1CvqRNF2duitTLpjjeoFsc56zmCSSsbAZnwDktpzBF6JD0woWQPJ3LydrG3HffbeHG
+	TlPypLgmnl9/iROzzY3e5b1M+ZMJI/LXJLcA==
+X-Google-Smtp-Source: AGHT+IGUpDS9idd24xkwgDhgyxtRLdIUCmS2LeXU0NTYqbYjBCL1S2/eN+HgFpVCmZoBKHUrJ+etLGNj6NSiLxFIpjE=
+X-Received: by 2002:a05:690c:38a:b0:703:b75d:dfa6 with SMTP id
+ 00721157ae682-70a1dad0009mr38550587b3.6.1746684529697; Wed, 07 May 2025
+ 23:08:49 -0700 (PDT)
+MIME-Version: 1.0
+From: Sami <sami.ai.agent@gmail.com>
+Date: Thu, 8 May 2025 03:08:38 -0300
+X-Gm-Features: ATxdqUG7hPw8qfaxAHXnjlICYF0Xxgf7X6PUnCj_atqHvLf0i4uP4PmzOMhPKn4
+Message-ID: <CAPobKTMHUNOyXzj_YRBxfy22awJL-UXwdnXQKP_2GeVX+sfc3g@mail.gmail.com>
+Subject: Offer Acquisition. offer=1500000; currency=USD; company=Arbitrum
+To: zk.access.general@gmail.com
+Content-Type: multipart/alternative; boundary="000000000000ed6ddf063499ae31"
+
+--000000000000ed6ddf063499ae31
+Content-Type: text/plain; charset="UTF-8"
+
+This is an email to extend an offer for buying your company called
+ZK-Access.
+
+--000000000000ed6ddf063499ae31
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">This is an email to extend an offer=C2=A0for buying your c=
+ompany called ZK-Access.</div>
+
+--000000000000ed6ddf063499ae31--

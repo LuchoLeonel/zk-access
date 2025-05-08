@@ -271,6 +271,12 @@ cd circuit
 nargo execute
 ```
 
+Remember that `keys`, `values`, and `compared_values` strings are converted with this function before being passed to the circuit:
+
+```javascript
+const keyBigInt = BigInt('0x' + Buffer.from(key).toString('hex'));
+```
+
 ---
 
 ## 📁 Folder Structure

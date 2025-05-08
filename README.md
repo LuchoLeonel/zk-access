@@ -264,7 +264,7 @@ Visit `http://localhost:3000` — and click “Start Demo”.
 
 4. **Play with the credentials**
 
-If you'd like to manually play with the circuit inputs for the credentials, you can modify or add data in the `Prover.toml` file. After making changes, execute the following command to run the circuit:
+If you'd like to manually play with the circuit inputs from the credential after completing the flow, you can modify or add data in the `Prover.toml` file. After making changes, execute the following command to run the circuit:
 
 ```bash
 cd circuit

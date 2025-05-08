@@ -2,6 +2,10 @@
 FROM node:23.3.0-slim AS builder
 LABEL com.centurylinklabs.watchtower.enable="true"
 
+
+# Instala Git y otras dependencias necesarias
+RUN apk add --no-cache git
+
 WORKDIR /app
 
 # Habilitar Corepack y Yarn 3.2.3

@@ -2925,7 +2925,7 @@
     expo-modules-autolinking "^0.0.3"
     invariant "^2.2.4"
 
-"@veramo-community/lds-ecdsa-secp256k1-recovery2020@github:uport-project/EcdsaSecp256k1RecoverySignature2020":
+"@veramo-community/lds-ecdsa-secp256k1-recovery2020@uport-project/EcdsaSecp256k1RecoverySignature2020":
   version "0.0.8"
   resolved "https://codeload.github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/tar.gz/ab0db52de6f4e6663ef271a48009ba26e688ef9b"
   dependencies:
@@ -6916,6 +6916,11 @@ jose@^4.3.8:
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.9.tgz#9b68eda29e9a0614c042fa29387196c7dd800100"
   integrity sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==
 
+jose@^6.0.11:
+  version "6.0.11"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-6.0.11.tgz#0b7ea8b3b21a1bda5e00255a044c3a0e43270882"
+  integrity sha512-QxG7EaliDARm1O1S8BGakqncGT9s25bKL1WSf6/oa17Tkqwi8D2ZNglqCF+DsYF88/rV66Q/Q2mFAy697E1DUg==
+
 joycon@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/joycon/-/joycon-3.1.1.tgz#bce8596d6ae808f8b68168f5fc69280996894f03"
@@ -7029,7 +7034,7 @@ jsonld@5.2.0:
     lru-cache "^6.0.0"
     rdf-canonize "^3.0.0"
 
-"jsonld@github:digitalcredentials/jsonld.js#v10.1.x":
+jsonld@digitalcredentials/jsonld.js#v10.1.x:
   version "8.3.3-0"
   resolved "https://codeload.github.com/digitalcredentials/jsonld.js/tar.gz/da0794d863eeb65faf27673d46d9cffa32e1b65a"
   dependencies:
@@ -7038,7 +7043,7 @@ jsonld@5.2.0:
     lru-cache "^6.0.0"
     rdf-canonize "^4.0.1"
 
-"jsonld@github:digitalcredentials/jsonld.js#v10.x":
+jsonld@digitalcredentials/jsonld.js#v10.x:
   version "8.3.3-0"
   resolved "https://codeload.github.com/digitalcredentials/jsonld.js/tar.gz/14357f7a1181ae769ecc50fee9303468f17665ff"
   dependencies:

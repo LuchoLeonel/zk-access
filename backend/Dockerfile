@@ -10,37 +10,17 @@ RUN corepack enable \
     && yarn set version 3.2.3
 
 # Instalar paquetes
-RUN apt-get update && apt-get install -y \
-  git \
-  python3 \
-  make \
-  g++ \
-  && rm -rf /var/lib/apt/lists/*
+# Copia package.json y yarn.lock antes para aprovechar la cache de Docker
+COPY package.json yarn.lock ./
 
-COPY . .
-
-# Instalar dependencias sin modificar yarn.lock
+# Instala dependencias
 RUN yarn install
 
-# Compilar la app NestJS
-RUN yarn build
+# Copia el resto de la app
+COPY . .
 
-# Etapa 2: Producción
-FROM node:23.3.0-slim
+# Expone el puerto que usa Next.js por defecto
+EXPOSE 3000
 
-RUN apt-get update && apt-get install -y curl
-
-WORKDIR /app
-
-# Copiar archivos esenciales desde el builder
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/yarn.lock ./
-COPY --from=builder /app/.yarn ./.yarn
-COPY --from=builder /app/.yarnrc.yml ./.yarnrc.yml
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/tsconfig.json ./
-COPY --from=builder /app/dist ./dist
-
-EXPOSE 8000
-
-CMD ["node", "-r", "tsconfig-paths/register", "dist/main.js"]
+# Comando por defecto para dev
+CMD ["yarn", "dev"]

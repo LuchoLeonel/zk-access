@@ -1,96 +1,153 @@
 Delivered-To: zk.access.general@gmail.com
-Received: by 2002:a05:6504:2346:b0:291:c020:42bd with SMTP id o6csp325921ltx;
-        Wed, 7 May 2025 23:08:50 -0700 (PDT)
-X-Received: by 2002:a05:690c:6c8a:b0:6fd:97a7:1474 with SMTP id 00721157ae682-70a1d9f9351mr95368567b3.11.1746684530321;
-        Wed, 07 May 2025 23:08:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1746684530; cv=none;
+Received: by 2002:a05:6504:2346:b0:291:c020:42bd with SMTP id o6csp417765ltx;
+        Thu, 8 May 2025 02:54:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmQEY624pC6s7xXV9OU9lLmw0F4HogN1o+k/0+LtOjVK+a9Mpm5yeeJooRbZkHR9i3BQ+v
+X-Received: by 2002:a17:90b:4a51:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-30aac184d78mr9266772a91.5.1746698046867;
+        Thu, 08 May 2025 02:54:06 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1746698046; cv=pass;
         d=google.com; s=arc-20240605;
-        b=A/XZwfsGnrYuJ4AZ5XVTVsG7K6UWPAvqSBHnqFC6aTiZFtRANREMILIbVdtY3gHyEo
-         HzYNPXx1Hxsd77Pz1NES0rvKMi7BkqqdR6JnMk5B3F8snM4MR1bsGeGpL/fOVsmIgkit
-         sQUbQ8YEDQ1hOnJSstSjyTW0XsLt7HX7wv7TwaSlZR/YutMnRRjtL03DYJp6vM7VHA8e
-         xoOGkLaAVGuJEMBbU464GmSoc8053F2+/X9voi+0silu5hY852z75t8hNoDF9eIfChaI
-         WBDU2jR7BAF+isKAjMZLBDRYIvg1Ab+wWQwu7t8xcR1lZwZEqwcwqtmbw9mQPSBGaw9s
-         9vkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=YAMB2ZxKp7Nu7pHPSLx4MTl9vmPhgYsCywkuiqmecV0=;
-        fh=1DPc8kHs/1kdNQzhm5YFZqHveQmWKarw2abxOVZ/mFk=;
-        b=bJ/NdkIwkQC83UOg6z2EjZfzOlalSelebg2xY3SOGmF0ndo1aVQ6RPB0cdfdvv7k8j
-         ICURAngJ5zaZU101Ke0R3dAtuB8DRIJqYh1qki59kE2sYAGf19AOUWm1L5nC13a6nUys
-         yOVGUv+IQanioeMFIJJ/kmx9xmjYXhpWlvzF7j9LBCrgL5GVmT7udt2QeCsrFQP/3ubT
-         fI3ORvndxGmx+8kLFs7NRTcZtROf+J3RqaM2q9Dl9/90JHSwiCcpYsprWNDmnvGxlWdk
-         aLPfh68bw4RsJRpo11IOwZwDYn3WEHumw8dit1z7xllrgH96KCUYPUoDTj1oACulMdf/
-         YS8A==;
+        b=EzAcwSDWElvCD2QnT/E1xPOj9wLjtwzcRa6dnXzBF+wGACRFm/J8pLON+m6OCqW3z5
+         1oVTIIxsjV/BWFDGGTCmlQIHdRLGbQTUfbIELy9R3WIan2wOeo2acQBuwPSG3eEoFmP5
+         QZh1WucN9EnIPPtjnTxP0MISvACmjbfcLhW9x8YhJ//K4F1c+StT33xtXQID91QabviT
+         5+M+APSG8FfrppTxk15mxcw2CkBPz19ohp7ZnNQGgIHyI9JhCs4zIXcqwDrqV5zI8RZk
+         QX5gPCfzwX5qKqfSfQ9CcDjBQp87Qu/tJLFQx/XbA8MAYusIl9CjwT1Q04s/b/fJJiZR
+         n49w==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=date:message-id:subject:to:from:mime-version:dkim-signature;
+        bh=MJjZbb6jJdxeuD5NYOd2GAdH6Ph4BqFSXXS6hg9cVNc=;
+        fh=TuU3k9wdb/RjOB1xnhh6EtXJrU/xVOb6XVLaaSrm5s0=;
+        b=cGg+oS95Sw76UfDAWV3Xtzwk82HlLmz+USGHRkIyq1+WjLUG0AoJ9LOADDPncSQa1z
+         ZfZVynCnZ0kETbjGrMMMQqCjmI6pq0igmbYDtYHcOFzXXXNmelku7wAE6ci6nSJZIhde
+         QAf4HpnjQyfCEewUygODh6HJ311Uhc/piXy2EgjiMvEML4M2o45ZPOxaZuPHEg1k8De0
+         1LyhLJEgEDv1wZ7wL+YAvJDYTAHNRW/DwMqm6qLQMsVPgssz7M6xqv773PBVjsrrmo9y
+         upqdFobWg0GZIBZYupXjukNetwtlwCFn/2FZROciyYTK0niWEo/2m4ATvw+MbGS6NZ30
+         beyQ==;
         dara=google.com
-ARC-Authentication-Results: i=1; mx.google.com;
-       dkim=pass header.i=@gmail.com header.s=20230601 header.b=VVi++rrX;
-       spf=pass (google.com: domain of sami.ai.agent@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=sami.ai.agent@gmail.com;
-       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
-       dara=pass header.i=@gmail.com
-Return-Path: <sami.ai.agent@gmail.com>
-Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
-        by mx.google.com with SMTPS id 00721157ae682-708c38e47b7sor44625047b3.0.2025.05.07.23.08.50
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@ramelax.com header.s=hostingermail-a header.b=r6lto5Ah;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of luciano.carreno@ramelax.com designates 23.83.209.55 as permitted sender) smtp.mailfrom=luciano.carreno@ramelax.com;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=ramelax.com
+Return-Path: <luciano.carreno@ramelax.com>
+Received: from eastern.birch.relay.mailchannels.net (eastern.birch.relay.mailchannels.net. [23.83.209.55])
+        by mx.google.com with ESMTPS id 98e67ed59e1d1-30ad4d3831fsi2556511a91.66.2025.05.08.02.54.06
         for <zk.access.general@gmail.com>
-        (Google Transport Security);
-        Wed, 07 May 2025 23:08:50 -0700 (PDT)
-Received-SPF: pass (google.com: domain of sami.ai.agent@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 02:54:06 -0700 (PDT)
+Received-SPF: pass (google.com: domain of luciano.carreno@ramelax.com designates 23.83.209.55 as permitted sender) client-ip=23.83.209.55;
 Authentication-Results: mx.google.com;
-       dkim=pass header.i=@gmail.com header.s=20230601 header.b=VVi++rrX;
-       spf=pass (google.com: domain of sami.ai.agent@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=sami.ai.agent@gmail.com;
-       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
-       dara=pass header.i=@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746684530; x=1747289330; dara=google.com;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YAMB2ZxKp7Nu7pHPSLx4MTl9vmPhgYsCywkuiqmecV0=;
-        b=VVi++rrX+Ae2vJuhB7hCGhnlpHF4u4S19w31GjYxZByVGt9d3ad6gj9ekJbv/YJr+O
-         OkAnSOeMGSntPqciHfqtrMs8DGj7KlzRhcuoPcPwOsnjO3rWk6Wuemf9dku4nAVX/Tht
-         qDHbyx6rAAEKdBICvt9Hde8C4Qh8+kGStXdaN490uWEqAtDSjzo8+8qxjsaqAcpuvmit
-         Nyi7EyNQ416wXttZ0EuZzhYVCOofWLnbp6K1EMdxUJvFo0kmpp85cDNOtt9goSs7sJPs
-         7QrA2iJ76hlCRWCJjQ1pwuRAlR/oXVX/9hSpSBv/dlPfzL+Uy0bBTkRVaJ0AaTBVEHzc
-         nMkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746684530; x=1747289330;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YAMB2ZxKp7Nu7pHPSLx4MTl9vmPhgYsCywkuiqmecV0=;
-        b=o0g2PeXbl4r++DYAlP2p8OPbjYs21zd0wx9B95bSzf+aFKYH9T5PecziMizC03dpEe
-         PxRxwoj05o1MycjdUA2B9bI93LT2bfx67jmCdV1cNsSYEWt61+dpPdA2sG5PqBKK9hf9
-         6JvqeQXUIpV741MTjZK9hRMHwjVYlirq9AOiqWxMVciidtBPeb//yqTyF/vzbDqkn+eo
-         AfAtVFMKXSYF+96If81T7E/XtyqL4SFjQrWaGWbw6kIFEyhPzREbn4wXEfklR499GVPr
-         HOSvbOFvRfrWRTMcxjJKlZwOPgVNsB9o36Tv3IIWRRBsblxjnguancXYXTXqGgdOs4XJ
-         MHOg==
-X-Gm-Message-State: AOJu0Yz8bhLkUvXAVPqAOqMyjzI4M5n0UzOMyKNjtft/hWjWO5Ltirm3
-	8EXbDwz+U8HyEOaR2kMY6wVy7hDh6olU+oM6JsqRgtPdFec7A4Kax6gL2JUcQ66E7kkukDA1W5P
-	EKbHFXUCJtPO5h/+dzhu5U4XwpIvD4/dW
-X-Gm-Gg: ASbGnctFwV/giwjqEfATj0K5imMG7ZEN6H9xlVUBtBUnVnQtHo4cD51LRu5X0pQ8lu+
-	BB5fI4xEj1CvqRNF2duitTLpjjeoFsc56zmCSSsbAZnwDktpzBF6JD0woWQPJ3LydrG3HffbeHG
-	TlPypLgmnl9/iROzzY3e5b1M+ZMJI/LXJLcA==
-X-Google-Smtp-Source: AGHT+IGUpDS9idd24xkwgDhgyxtRLdIUCmS2LeXU0NTYqbYjBCL1S2/eN+HgFpVCmZoBKHUrJ+etLGNj6NSiLxFIpjE=
-X-Received: by 2002:a05:690c:38a:b0:703:b75d:dfa6 with SMTP id
- 00721157ae682-70a1dad0009mr38550587b3.6.1746684529697; Wed, 07 May 2025
- 23:08:49 -0700 (PDT)
+       dkim=pass header.i=@ramelax.com header.s=hostingermail-a header.b=r6lto5Ah;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of luciano.carreno@ramelax.com designates 23.83.209.55 as permitted sender) smtp.mailfrom=luciano.carreno@ramelax.com;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=ramelax.com
+X-Sender-Id: hostingeremail|x-authuser|luciano.carreno@ramelax.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E1AFC2C3364
+	for <zk.access.general@gmail.com>; Thu,  8 May 2025 09:54:05 +0000 (UTC)
+Received: from nl-srv-smtpout7.hostinger.io (trex-green-5.trex.outbound.svc.cluster.local [100.112.107.206])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1D9882C34B5
+	for <zk.access.general@gmail.com>; Thu,  8 May 2025 09:54:04 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1746698045; a=rsa-sha256;
+	cv=none;
+	b=U9kWUUhxCMArxJZyrZvvl21T/tjQ0ecs/okn73aTjWoz/qGKfVgy6RL+UwjGBlSa9Z3HSH
+	u7VEl9ZElNzcO5Bn+GnD1p0DU7RCS9rFOiPandxY7LUQN0Y161bTGTBkmnorLWGEj+hbdK
+	i3NmDbb4VecriFNGgC7aBxXOcggASPCafVs6vQk3VF9BLQimUwX1y1xLYHc4A1XRfYZtx1
+	Oc4+cS86cCI15+S9GJ1evFoXZNp3We1mre8UgtxvHorn1kSBtsfsb/27sIcss2/rw36bbI
+	czI/tUsQXvi6+LT+noU8aZV31V1YPfQEbijZ1q78dV/dVuPFYPqANBRd9MJpYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1746698045;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 dkim-signature; bh=MJjZbb6jJdxeuD5NYOd2GAdH6Ph4BqFSXXS6hg9cVNc=;
+	b=kAYwJVlfCyaseRLX/uPuQqUCHqik4pDgR7/cZoocjBO36n3FuHZzbWqFb0IFIf7TlXTo+H
+	qbw7szCfmUa0T3igle+zXsWTXpgKFPNIwG6dhA6jT7kw2W12KKMqDbA7g/gB1cxeUUhvHq
+	gGqzDrlshCJ3TZaF6MV7DG2okKbpQDSiGLbCIBG6ZZZ4nSzrdZeJOMsIvYcy2QsoG/Ppki
+	60I3UZtLg844I3mdpXcGTkKQibSb8ls5GmR3XCUl4PWVLwFTWcZuUIJcrEpuUWounvf6SE
+	mTclqmP9IwT4JiTsOXF8XJyOZ0dUCAC6aRhN1ICZk7NdFAmfpYIInYlzgTu//A==
+ARC-Authentication-Results: i=1;
+	rspamd-74dcc76ff8-jt5zp;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=luciano.carreno@ramelax.com
+X-Sender-Id: hostingeremail|x-authuser|luciano.carreno@ramelax.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|luciano.carreno@ramelax.com
+X-MailChannels-Auth-Id: hostingeremail
+X-Vacuous-Print: 3e4d8d3921f10bbb_1746698045630_1087576064
+X-MC-Loop-Signature: 1746698045630:3337773761
+X-MC-Ingress-Time: 1746698045630
+Received: from nl-srv-smtpout7.hostinger.io (nl-srv-smtpout7.hostinger.io
+ [45.87.82.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.112.107.206 (trex/7.0.3);
+	Thu, 08 May 2025 09:54:05 +0000
+Received: from mail.hostinger.com (34.86.89.34.bc.googleusercontent.com [190.229.97.208])
+	(Authenticated sender: luciano.carreno@ramelax.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with SMTP id 4ZtSBy6gklz8fg70
+	for <zk.access.general@gmail.com>; Thu, 08 May 2025 09:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ramelax.com;
+	s=hostingermail-a; t=1746698043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=MJjZbb6jJdxeuD5NYOd2GAdH6Ph4BqFSXXS6hg9cVNc=;
+	b=r6lto5Ah/Hgdbpe0nN2EEAa05Tr5e5AaUdJEFKO51vno9ZYS0l4OgDKouuIYUOOvDpRC3Z
+	nXX1OG8yzGOfobrh9Tirn6DNygpVVbYG2AyKphuZAZbfA8eQiXLGVv5lkXGuXePfVl7DrU
+	GkFzBZ4q5igysOn2n+AzEPFNxnQB01UNOyqtsmYonsx6sgFVNb6ReW5sS5LBfmZCJ0CGqc
+	c7CQ1se6bTpu/ChNp5cv5/MQtbV2tWKBKmSNQFzWrIev8Wsb0RDftcV6NT68uYHCFbyN7J
+	4A9Ts+/f/KlYn5+egW9a4kqMMPAkBf/DDg7u2iR7TpCi5eCMa9j7R3MT3Th9GQ==
 MIME-Version: 1.0
-From: Sami <sami.ai.agent@gmail.com>
-Date: Thu, 8 May 2025 03:08:38 -0300
-X-Gm-Features: ATxdqUG7hPw8qfaxAHXnjlICYF0Xxgf7X6PUnCj_atqHvLf0i4uP4PmzOMhPKn4
-Message-ID: <CAPobKTMHUNOyXzj_YRBxfy22awJL-UXwdnXQKP_2GeVX+sfc3g@mail.gmail.com>
-Subject: Offer Acquisition. offer=1500000; currency=USD; company=Arbitrum
-To: zk.access.general@gmail.com
-Content-Type: multipart/alternative; boundary="000000000000ed6ddf063499ae31"
+From: luciano.carreno@ramelax.com
+To: "Zk.access General" <zk.access.general@gmail.com>
+Subject: Offer Acquisition offer=1500000; currency=USD; company=Arbitrum
+Message-ID: <10fd283ece9fe6d491f911c2c22b6579@ramelax.com>
+X-Sender: luciano.carreno@ramelax.com
+Content-Type: multipart/alternative;
+ boundary="=_a2a6b07df10b445a0c087a824a7c6ec3"
+Date: Thu, 08 May 2025 09:54:02 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=AoO83/9P c=1 sm=1 tr=0 ts=681c7f3b a=hEbJWpUymxJPJaOO5cY88w==:117 a=hEbJWpUymxJPJaOO5cY88w==:17 a=Ob4IU7JXyIcf-AjXc2AA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10 a=81zJbvq10R2iNQMcu0cA:9 a=WAvQpnQraW5KbwqA:21 a=_W_S_7VecoQA:10 a=QEXdDO2ut3YA:10
+X-CM-Envelope: MS4xfHu+yXttHbbiUKqhLUUaZYS5emzWhEvRrlHSoUkqTuGghFKRvbOvLi3zljZKj6CxEWewNFWIYLgioZVuu77OvCiUWdL6pipQbg2dJ6mB7i7yV71uCo2p sRGxXWbstpfyEn1xKXFyBTB2NgkfCFi6BddVMfuy5SaZp6Hst0djqkQJcIpAuzKg10jX/nQncGdkK07ucz2Uh/rj+zS9uTV1IpxqXIkMXyfXrLDzTJrYP+C3
+X-AuthUser: luciano.carreno@ramelax.com
 
---000000000000ed6ddf063499ae31
-Content-Type: text/plain; charset="UTF-8"
+--=_a2a6b07df10b445a0c087a824a7c6ec3
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 
-This is an email to extend an offer for buying your company called
+This is an email to extend an offer for buying your company called 
 ZK-Access.
-
---000000000000ed6ddf063499ae31
-Content-Type: text/html; charset="UTF-8"
+--=_a2a6b07df10b445a0c087a824a7c6ec3
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=UTF-8
 
-<div dir=3D"ltr">This is an email to extend an offer=C2=A0for buying your c=
-ompany called ZK-Access.</div>
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8" /></head><body style=3D'font-size: 10pt; font-family: Verdana,Gen=
+eva,sans-serif'>
+<div id=3D"signature">
+<div class=3D"gs" style=3D"color: #222222; font-size: 16px; font-family: 'G=
+oogle Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif; background-=
+color: #ffffff;">
+<div class=3D"">
+<div id=3D":8s" class=3D"ii gt" style=3D"font-size: 0.875rem;">
+<div id=3D":8t" class=3D"a3s aiL ">
+<div dir=3D"ltr">
+<div style=3D"font-size: 16px; font-family: 'Google Sans', Roboto, RobotoDr=
+aft, Helvetica, Arial, sans-serif;">
+<div>
+<div id=3D"m_4078347312181890270gmail-:t1" style=3D"font-size: 0.875rem;">
+<div id=3D"m_4078347312181890270gmail-:s9" style=3D"font-size: small; font-=
+family: Arial, Helvetica, sans-serif;">
+<div dir=3D"ltr">This is an email to extend an offer for buying your compan=
+y called ZK-Access.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>
 
---000000000000ed6ddf063499ae31--
+--=_a2a6b07df10b445a0c087a824a7c6ec3--

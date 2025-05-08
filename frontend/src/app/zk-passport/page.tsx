@@ -5,6 +5,7 @@ import { ZKPassport } from '@zkpassport/sdk';
 import { useRouter } from 'next/navigation';
 import QRCode from 'react-qr-code';
 import { useProofStore } from '@/hooks/useProofStore';
+import { isEmpty } from 'lodash';
 
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
@@ -18,7 +19,7 @@ export default function ZKPassportPage() {
   const zkpassportRef = useRef<ZKPassport | null>(null);
   const proofRef = useRef<any | null>(null);
 
-  const { proof: zkEmailProof, setQrCode } = useProofStore();
+  const { proofs: zkEmailProofs, setZKCredential } = useProofStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -30,11 +31,11 @@ export default function ZKPassportPage() {
 
 
   useEffect(() => {
-    if (zkEmailProof === undefined) return;
-    if (!zkEmailProof) {
+    if (zkEmailProofs === undefined) return;
+    if (isEmpty(zkEmailProofs)) {
       router.replace('/');
     }
-  }, [zkEmailProof]);
+  }, [zkEmailProofs]);
 
   useEffect(() => {
     const runZkPassport = async () => {
@@ -110,18 +111,18 @@ export default function ZKPassportPage() {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                zkEmailProof,
+                zkEmailProofs,
                 zkPassportProof: passportData,
               }),
             });
 
-            if (!res.ok) throw new Error('Failed to generate QR');
+            if (!res.ok) throw new Error('Failed to generate Credential');
 
-            const { qrCode } = await res.json();
-            console.log('🎫 QR Code generado:', qrCode);
+            const { credential } = await res.json();
+            console.log('🎫 Credential Generada:', credential);
 
-            setQrCode(qrCode);
-            router.push('/claim-credential');
+            setZKCredential(credential);
+            router.push('/credential');
           } catch (err) {
             console.error('❌ Error al enviar datos al backend:', err);
             setLoading(false);
@@ -144,20 +145,19 @@ export default function ZKPassportPage() {
     };
 
     runZkPassport();
-  }, [zkEmailProof, router]);
+  }, [zkEmailProofs, router]);
 
   return (
     <main className="p-8 flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-6">ZK-Passport Verification</h1>
       <p className="text-center text-gray-700 max-w-xl mb-8">
-        To create your Verifiable Credential, we now need to verify some personal data from your ZKPassport.
-        This process uses <strong>Zero-Knowledge Proofs</strong>, which means your sensitive information stays private —
-        only the necessary facts are proven, never exposed.
+        Since this is your first time using <strong>ZK-Access</strong>, we’ll verify your identity with <strong>zkPassport</strong> to generate your <strong>modular credential</strong>.  
+        This links your verified offers to <strong>you</strong>—securely and privately—using <strong>Zero-Knowledge Proofs</strong>.  
+        No personal data is ever exposed, just the facts you choose to prove.
       </p>
-
       {loading ? (
         <p className="text-blue-600 font-semibold">
-        ⏳ Processing proof. Please wait{dots}
+        ⏳ Processing proof and creating Credential. Please wait{dots}
           {Array(3 - dots.length).fill('.').map((d, i) => (
             <span key={i} className="invisible">{d}</span>
           ))}

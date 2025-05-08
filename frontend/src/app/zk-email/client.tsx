@@ -199,15 +199,14 @@ export default function InboxPage() {
       setStatus("generating");
       router.prefetch("/zk-passport");
       const sdk = zkEmailSdk();
-      const blueprint = await sdk.getBlueprint("LuchoLeonel/ZkAccess@v2");
+      const blueprint = await sdk.getBlueprint("LuchoLeonel/ZkAccess@v8");
       const prover = blueprint.createProver();
   
-      const tempProofs = await Promise.all(
-        emails.map(async (email) => {
-          const tempProof = await prover.generateProof(email.emlContent);
-          return tempProof;
-        })
-      );
+      const tempProofs = [];
+      for (const email of emails) {
+        const proof = await prover.generateProof(email.emlContent);
+        tempProofs.push(proof);
+      }
   
       setProofs(tempProofs);
     } catch (err) {

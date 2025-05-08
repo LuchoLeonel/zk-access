@@ -9,6 +9,6 @@ export class ZkController {
 
   @Post('generate')
   async verifyProofs(@Body() body: VerifyProofsDto) {
-    return this.zkService.verifyCombinedProofs(body.zkEmailProof, body.zkPassportProof);
+    return this.zkService.verifyCombinedProofs(body.zkEmailProofs, body.zkPassportProof);
   }
 }

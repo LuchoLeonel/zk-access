@@ -9,22 +9,40 @@ ed.etc.sha512Sync = sha512;
 const FIELD_MODULUS = BigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
 
 
-export const poseidonHash = async (key: string, value: string) => {
-    if (!key || !value) {
-      throw new Error("poseidonHash recibió un uuid, key o value vacío");
+
+
+export const poseidonHash = async (key: string, value: any) => {
+    if (!key || value === undefined || value === null) {
+      throw new Error("poseidonHash recibió un key o value vacío");
     }
   
     const poseidon = await circomlib.buildPoseidon();
+  
     const keyBigInt = BigInt('0x' + Buffer.from(key).toString('hex'));
-    const valueBigInt = BigInt('0x' + Buffer.from(value).toString('hex'));
-    console.log({key, keyBigInt})
-    console.log({value, valueBigInt})
+  
+    let valueBigInt: bigint;
+    if (typeof value === 'number' || typeof value === 'bigint') {
+        valueBigInt = BigInt(value);
+    } else if (typeof value === 'string') {
+        try {
+            valueBigInt = BigInt(value);
+        } catch {
+            valueBigInt = BigInt('0x' + Buffer.from(value).toString('hex'));
+        }
+    } else {
+        throw new Error('Tipo de value no soportado');
+    }
+  
+    console.log({ key, keyBigInt });
+    console.log({ value, valueBigInt });
 
     if (BigInt(keyBigInt) >= FIELD_MODULUS || BigInt(valueBigInt) >= FIELD_MODULUS) {
         throw new Error('fields have a wrong len');
     }
+    const keyHash = poseidon([keyBigInt]);
+    const valueHash = poseidon([valueBigInt]);
 
-    const hash = poseidon([keyBigInt, valueBigInt]);
+    const hash = poseidon([keyHash, valueHash]);
     return hash;
 };
 

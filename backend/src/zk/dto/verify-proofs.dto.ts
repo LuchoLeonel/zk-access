@@ -1,5 +1,5 @@
 export class VerifyProofsDto {
-    zkEmailProof: any;
+    zkEmailProofs: any[];
     zkPassportProof: {
       firstname: string,
       lastname: string,

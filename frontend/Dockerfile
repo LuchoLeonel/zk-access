@@ -11,6 +11,13 @@ RUN corepack enable \
 
 COPY . .
 
+
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_BACKEND_URL
+
+ENV NEXT_PUBLIC_BASE_URL=https://zk-access.aichallenge.fun
+ENV NEXT_PUBLIC_BACKEND_URL=https://api.zk-access.aichallenge.fun
+
 RUN yarn install
 
 RUN yarn build

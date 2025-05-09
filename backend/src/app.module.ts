@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ZkService } from './zk/zk.service';
 import { VCService } from './vc/vc.service';
-import { VcCredentialController } from './vc/vc.controller';
 import { ZkController } from './zk/zk.controller';
 
 @Module({
@@ -17,7 +16,7 @@ import { ZkController } from './zk/zk.controller';
       synchronize: true,
     }),
   ],
-  controllers: [AppController, VcCredentialController, ZkController],
+  controllers: [AppController, ZkController],
   providers: [AppService, VCService, ZkService],
 })
 export class AppModule {}

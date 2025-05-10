@@ -6,7 +6,7 @@ fn main(
     keys: pub [Field; 10],
     hashes: pub [Field; 10],
     compared_values: pub [Field; 10],
-    operations: pub [u8; 10],
+    operations: pub [Field; 10],
     signature_R8xs: pub [Field; 10],
     signature_R8ys: pub [Field; 10],
     signature_Ss: pub [Field; 10],

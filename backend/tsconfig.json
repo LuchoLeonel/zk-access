@@ -2,7 +2,8 @@
   "compilerOptions": {
     "types": ["node"],
     "module": "commonjs",
-    "target": "ES2023",
+    "target": "esnext",
+    "resolveJsonModule": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -19,5 +20,8 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "circuit/target/**/*.json"
+  ]
 }

@@ -2,6 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-}
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      buffer: require.resolve('buffer/'),
+    };
 
-module.exports = nextConfig 
+    return config;
+  },
+};
+
+module.exports = nextConfig;

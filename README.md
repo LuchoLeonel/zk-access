@@ -288,9 +288,9 @@ const key = `offerAc[${index}].offer`;
 ## 📁 Folder Structure
 
 - `/frontend` — Landing page + credential demo flow (`zk-email`, `zk-passport`)
+- `/frontend/public/eml` — Mocked emails for demo
 - `/backend` — Email parsing, credential generation, proof generation API
-- `/circuit` — Noir proof logic (.nr file)
-- `/public/eml` — Mocked emails for demo
+- `/backend/circuit` — Noir proof logic (.nr file)
 
 ---
 

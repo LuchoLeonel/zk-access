@@ -107,7 +107,7 @@ export default function ZKPassportPage() {
               documentNumber: result.document_number?.disclose?.result ?? '',
             };
 
-            const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/zk/generate`, {
+            const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/zk/create-credential`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

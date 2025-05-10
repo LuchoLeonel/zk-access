@@ -9,8 +9,6 @@ ed.etc.sha512Sync = sha512;
 const FIELD_MODULUS = BigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
 
 
-
-
 export const poseidonHash = async (key: string, value: any) => {
     if (!key || value === undefined || value === null) {
       throw new Error("poseidonHash recibió un key o value vacío");

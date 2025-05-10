@@ -57,3 +57,7 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 database.sqlite
+
+target/*
+!target/Verifier.sol
+!target/zk_access.json

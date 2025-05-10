@@ -1,0 +1,46 @@
+[
+	{
+		"inputs": [],
+		"name": "ProofLengthWrong",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "PublicInputsLengthWrong",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "ShpleminiFailed",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "SumcheckFailed",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "proof",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes32[]",
+				"name": "publicInputs",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "verify",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

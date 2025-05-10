@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@metamask/providers": "^22.1.0",
+    "@noir-lang/noir_js": "^1.0.0-beta.5",
+    "@noir-lang/noir_wasm": "^1.0.0-beta.5",
     "@radix-ui/react-slot": "^1.2.2",
     "@types/lodash": "^4.17.16",
     "@zk-email/sdk": "^0.0.139",
@@ -17,6 +20,7 @@
     "axios": "^1.9.0",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.1",
+    "ethers": "^6.14.0",
     "lodash": "^4.17.21",
     "mailparser": "^3.7.2",
     "next": "14.1.0",

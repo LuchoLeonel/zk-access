@@ -9,7 +9,6 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 
-
 const BLUEPRINT = "LuchoLeonel/ZkAccess@v8";
 
 
@@ -89,8 +88,9 @@ export class ZkService {
     };
   
     const { witness } = await noir.execute(inputs);
-    const proof = await backend.generateProof(witness);
-  
+    const proof = await backend.generateProof(witness, { keccak: true });
+    console.log("Proof length (bytes):", proof.proof.length);
+    console.log("Public inputs length (bytes):", proof.publicInputs.length * 32);
     return { proof };
   }
   
@@ -101,7 +101,7 @@ export class ZkService {
     const backend = new UltraHonkBackend(circuit.bytecode);
 
     const reconstructedProof = this.objectToUint8Array(proof);
-    const isValid = await backend.verifyProof({ proof: reconstructedProof, publicInputs });
+    const isValid = await backend.verifyProof({ proof: reconstructedProof, publicInputs }, { keccak: true });
     return { isValid };
   }
 

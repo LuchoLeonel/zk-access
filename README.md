@@ -282,6 +282,58 @@ Additionally, for nested fields, the keys are combined before being converted to
 ```
 const key = `offerAc[${index}].offer`;
 ```
+## Verify On-Chain (Optional)
+
+We’ve deployed a `Verifier.sol` contract on **Base Sepolia**. You can manually interact with it using [Remix](https://remix.ethereum.org/), for example by calling the `verify(bytes proof, bytes32[] publicInputs)` function.
+
+- **Contract address**: `0x20c0aa08d78cbcf3634b38ad587a9cc75b250ffc`
+- **ABI location in the repo**:  
+  ```
+  frontend/src/app/proof-composer/verifier.abi.json
+  ```
+
+To verify:
+
+1. Go to [Remix](https://remix.ethereum.org/)
+2. In the "Deploy & Run Transactions" plugin:
+   - Set environment to **Injected Provider - MetaMask**
+   - Paste the contract address in the "At Address" field
+   - Paste the ABI from `verifier.abi.json`
+3. Call the `verify` function with your EVM-formatted proof and the array of public inputs.
+4. Make sure you're connected to the **Base Sepolia** network.
+
+
+#### 🛠 Before Remix: Format the proof and public inputs
+
+You need to generate the proof and format it properly before using it in Remix.
+
+First, execute your circuit and generate the proof:
+
+```bash
+nargo execute
+bb prove -b ./target/<circuit-name>.json -w ./target/<witness-name> -o ./target --oracle_hash keccak
+```
+
+Then, extract the EVM-compatible proof and public inputs using:
+
+```bash
+PROOF_HEX=$(cat ./target/proof | od -An -v -t x1 | tr -d $' \n' | sed 's/^.\{8\}//')
+
+NUM_PUBLIC_INPUTS=72 
+HEX_PUBLIC_INPUTS=${PROOF_HEX:0:$((32 * $NUM_PUBLIC_INPUTS * 2))}
+SPLIT_HEX_PUBLIC_INPUTS=$(sed -e 's/.\{64\}/"0x&",/g' <<<"$HEX_PUBLIC_INPUTS")
+
+PROOF_WITHOUT_PUBLIC_INPUTS="${PROOF_HEX:$((NUM_PUBLIC_INPUTS * 32 * 2))}"
+
+echo 0x$PROOF_WITHOUT_PUBLIC_INPUTS
+echo "[$SPLIT_HEX_PUBLIC_INPUTS]"
+```
+
+The first line (`0x...`) is the `proof` input for Remix.  
+The second block (`["0x...", "0x...", ...]`) is the `publicInputs` array.
+
+Now you're ready to call the `verify` function on-chain!
+
 
 ---
 

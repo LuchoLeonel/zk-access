@@ -55,6 +55,7 @@
     "ethers": "^6.13.5",
     "ethr-did-resolver": "^11.0.3",
     "express": "^5.1.0",
+    "fflate": "^0.8.2",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
     "key-did-resolver": "^4.0.0",

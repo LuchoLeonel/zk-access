@@ -4,9 +4,21 @@ import { useProofStore } from '@/hooks/useProofStore';
 import { useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { generateZKProof, Rule } from './generate-proof';
+import { ethers } from 'ethers';
+import verifierAbi from './verifier.abi.json';
+import type { MetaMaskInpageProvider } from '@metamask/providers';
+
+declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+}
 
 
 const operationOptions = ['=', '>', '<'] as const;
+
+const VERIFIER_ADDRESS = process.env.NEXT_PUBLIC_BASE_SEPOLIA_VERIFIER;
+
 
 export default function VerifierPage() {
   const { ZKCredential, setZKCredential } = useProofStore();
@@ -95,7 +107,7 @@ export default function VerifierPage() {
     }
   };
 
-  const handleVerifyProof = async () => {
+  const handleVerifyProofLocally = async () => {
     if (!zkProof) return;
   
     setVerifyStatus('verifying');
@@ -114,6 +126,41 @@ export default function VerifierPage() {
       }
     } catch (err) {
       console.error('Error verifying proof:', err);
+      setVerifyStatus('error');
+    }
+  };
+
+  
+  const handleVerifyOnChain = async () => {
+    if (typeof window === 'undefined') return;
+    if (!zkProof) return;
+  
+    try {
+      setVerifyStatus('verifying');
+  
+      if (!window.ethereum) throw new Error('No wallet detected');
+  
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(VERIFIER_ADDRESS!, verifierAbi, signer);
+  
+      const NUM_PUBLIC_INPUTS = 72;
+      const BYTES_PER_INPUT = 32;
+      const HEADER_BYTES = 8;
+      const totalPublicBytes = NUM_PUBLIC_INPUTS * BYTES_PER_INPUT;
+  
+      const rawProof = Buffer.from(Object.values(zkProof.proof));
+      const pureProof = rawProof.slice(HEADER_BYTES, rawProof.length - totalPublicBytes);
+  
+      const evmProof = '0x' + pureProof.toString('hex');
+      const publicInputs = zkProof.publicInputs;
+  
+      console.log({ evmProof, publicInputs });
+  
+      const result = await contract.verify(evmProof, publicInputs);
+      setVerifyStatus(result ? 'valid' : 'invalid');
+    } catch (err) {
+      console.error('Error verifying on chain:', err);
       setVerifyStatus('error');
     }
   };
@@ -236,19 +283,19 @@ export default function VerifierPage() {
                           className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 ${
                             showProof
                               ? 'bg-gray-600 hover:bg-gray-700'
-                              : 'bg-blue-600 hover:bg-blue-700'
+                              : 'bg-gray-900 hover:bg-gray-800'
                           }`}
                         >
                           {showProof ? 'Hide Proof' : 'Show Proof'}
                         </button>
 
                         <button
-                          onClick={handleVerifyProof}
-                          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition duration-300"
+                          onClick={handleVerifyProofLocally}
+                          className="bg-green-700 hover:bg-green-800 text-white font-semibold px-4 py-2 rounded-lg transition duration-300"
                         >
-                          Verify Proof
+                          Verify Locally
                         </button>
-
+                        
                         <button
                           onClick={() => {
                             setZkProof(null);
@@ -259,7 +306,7 @@ export default function VerifierPage() {
                           className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 ${
                             verifyStatus === "verifying"
                               ? 'bg-gray-600 hover:bg-gray-700'
-                              : 'bg-red-500 hover:bg-red-600'
+                              : 'bg-red-700 hover:bg-red-800'
                           }`}
                         >
                           Restart

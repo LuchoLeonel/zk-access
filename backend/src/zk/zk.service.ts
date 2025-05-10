@@ -67,7 +67,7 @@ export class ZkService {
   }
  
   async generateProof(s: GenerateProofDto) {
-    const rawCircuitPath = join(__dirname, '../../circuit/target/zk_access.json');
+    const rawCircuitPath = join(__dirname, '../../public/zk_access.json');
     const rawCircuit = JSON.parse(readFileSync(rawCircuitPath, 'utf8'));
 
     const circuit = rawCircuit as CompiledCircuit;
@@ -95,7 +95,7 @@ export class ZkService {
   }
   
   async verifyProof({ proof, publicInputs }: any) {
-    const rawCircuitPath = join(__dirname, '../../circuit/target/zk_access.json');
+    const rawCircuitPath = join(__dirname, '../../public/zk_access.json');
     const rawCircuit = JSON.parse(readFileSync(rawCircuitPath, 'utf8'));
     const circuit = rawCircuit as CompiledCircuit;
     const backend = new UltraHonkBackend(circuit.bytecode);

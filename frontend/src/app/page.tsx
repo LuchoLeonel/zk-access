@@ -61,10 +61,10 @@ export default function Home() {
             We extract <strong>verified data</strong> —like <em>job offers</em>, <em>sealed bids</em>, <em>age verification</em>, or <em>hackathon wins</em>— from zk proofs.
             </li>
             <li>
-              These data are <strong>signed and structured</strong> into modular identity credentials that can live <strong>on-device</strong> or on <strong>private-by-default blockchains</strong>.
+              These data are <strong>signed and structured</strong> into a modular identity that can live <strong>on-device</strong> or on <strong>private-by-default blockchains</strong>.
             </li>
             <li>
-              Each credential lets you generate <strong>new zk proofs</strong> to <strong>selectively verify your claims</strong>—without exposing anything else.
+              Each claim in your identity lets you generate <strong>new zk proofs</strong> to <strong>selectively verify that specific data</strong>—without exposing anything else.
             </li>
             </ul>
           </div>
